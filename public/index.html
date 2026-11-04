@@ -4,23 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Crypto Analyzer & Trading Bot Dashboard</title>
+    <title>KontolKripto — Platform Trading Elit Harris Aulia (Bacin) | Sultan Cibubur</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-main: #0a0e17;
-            --bg-card: #131b2e;
-            --bg-card-subtle: #0d1526;
-            --border-color: #1e2c47;
+            --bg-main: #060911;
+            --bg-card: #0d1322;
+            --bg-card-hover: #121a2e;
+            --border-color: #1a253d;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
+            --gold: #f59e0b;
+            --gold-light: #fbbf24;
+            --gold-glow: rgba(245, 158, 11, 0.25);
             --green: #10b981;
             --green-glow: rgba(16, 185, 129, 0.25);
             --red: #ef4444;
             --red-glow: rgba(239, 68, 68, 0.25);
-            --yellow: #f59e0b;
-            --yellow-glow: rgba(245, 158, 11, 0.25);
             --blue: #38bdf8;
+            --purple: #a855f7;
         }
 
         * {
@@ -35,6 +37,9 @@
             margin: 0;
             padding: clamp(12px, 3vw, 24px);
             min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.05) 0%, transparent 40%);
         }
 
         .container {
@@ -44,37 +49,65 @@
         }
 
         /* ========================================================
-           HEADER BAR (RESPONSIVE)
+           HEADER & NAV BAR (VIP LUXURY CONGLOMERATE THEME)
            ======================================================== */
-        .header-bar {
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
             gap: 14px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .header-titles {
-            flex: 1 1 280px;
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .header-titles h1 {
+        .brand-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
             margin: 0;
-            font-size: clamp(1.2rem, 4vw, 1.7rem);
-            color: #ffffff;
+            font-size: clamp(1.3rem, 4vw, 1.85rem);
+            font-weight: 900;
+            background: linear-gradient(90deg, #ffffff 0%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 800;
         }
 
-        .header-titles p {
-            margin: 4px 0 0;
-            color: var(--text-secondary);
-            font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-controls {
@@ -90,7 +123,7 @@
             gap: 8px;
             background: var(--bg-card);
             padding: 4px 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             min-height: 44px;
         }
@@ -98,16 +131,16 @@
         .select-box label {
             color: var(--text-secondary);
             font-size: 0.82rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .select-box select {
-            background: #090e1a;
-            color: var(--blue);
+            background: #060911;
+            color: #fbbf24;
             border: 1px solid var(--border-color);
             padding: 8px 12px;
             border-radius: 8px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             outline: none;
             font-size: 0.92rem;
@@ -115,37 +148,107 @@
         }
 
         .btn-refresh {
-            background: #182238;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, #18243c 0%, #121a2c 100%);
+            color: #f8fafc;
+            border: 1px solid rgba(245, 158, 11, 0.35);
             padding: 0 16px;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             min-height: 44px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: all 0.2s;
-            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .btn-refresh:hover, .btn-refresh:active {
-            background: #223254;
-            border-color: var(--blue);
+            border-color: #fbbf24;
             transform: scale(0.98);
+            background: #1e2c48;
         }
 
         /* ========================================================
-           LEGEND BAR (RESPONSIVE)
+           FOUNDER & ABOUT BANNER (HARRIS AULIA / BACIN SULTAN CIBUBUR)
+           ======================================================== */
+        .founder-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(13, 19, 34, 0.95) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            padding: clamp(14px, 2.5vw, 18px);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-banner::after {
+            content: '👑 CIBUBUR ROYALE';
+            position: absolute;
+            right: 16px;
+            top: 14px;
+            font-size: 0.72rem;
+            font-weight: 900;
+            color: rgba(245, 158, 11, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .founder-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            border: 2px solid #ffffff;
+        }
+
+        .founder-content h2 {
+            margin: 0;
+            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+            color: #ffffff;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .founder-tag {
+            background: #fbbf24;
+            color: #000000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .founder-content p {
+            margin: 4px 0 0 0;
+            font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        /* ========================================================
+           COLOR LEGEND BAR
            ======================================================== */
         .legend-bar {
             display: flex;
             align-items: center;
             gap: 12px 18px;
-            background: #0f1626;
+            background: #0a0f1c;
             border: 1px solid var(--border-color);
             padding: 10px 14px;
             border-radius: 12px;
@@ -178,14 +281,14 @@
         }
 
         .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-        .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+        .dot-yellow { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
         .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
 
         /* ========================================================
-           HERO SIGNAL CARD (RESPONSIVE & DYNAMIC COLOR)
+           HERO SIGNAL CARD (DYNAMIC THEME)
            ======================================================== */
         .hero-card {
-            border-radius: 16px;
+            border-radius: 18px;
             padding: clamp(16px, 3vw, 26px);
             margin-bottom: 20px;
             display: grid;
@@ -197,21 +300,21 @@
         }
 
         .hero-card.theme-buy {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, #111e30 75%);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, #0d1728 75%);
             border: 2px solid var(--green);
-            box-shadow: 0 10px 35px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 10px 35px rgba(16, 185, 129, 0.25);
         }
 
         .hero-card.theme-sell {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, #1e1422 75%);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, #1c0f1d 75%);
             border: 2px solid var(--red);
-            box-shadow: 0 10px 35px rgba(239, 68, 68, 0.2);
+            box-shadow: 0 10px 35px rgba(239, 68, 68, 0.25);
         }
 
         .hero-card.theme-hold {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, #1c1d28 75%);
-            border: 2px solid var(--yellow);
-            box-shadow: 0 10px 35px rgba(245, 158, 11, 0.2);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, #191823 75%);
+            border: 2px solid var(--gold);
+            box-shadow: 0 10px 35px rgba(245, 158, 11, 0.25);
         }
 
         .signal-pill {
@@ -230,7 +333,7 @@
 
         .pill-buy { background: var(--green); color: #042f1e; }
         .pill-sell { background: var(--red); color: #ffffff; }
-        .pill-hold { background: var(--yellow); color: #2b1700; }
+        .pill-hold { background: var(--gold); color: #2b1700; }
 
         .hero-title {
             margin: 0 0 10px 0;
@@ -251,8 +354,8 @@
         }
 
         .advice-box {
-            background: rgba(9, 14, 26, 0.7);
-            border-left: 4px solid var(--blue);
+            background: rgba(6, 9, 17, 0.75);
+            border-left: 4px solid var(--gold);
             padding: 12px 14px;
             border-radius: 0 10px 10px 0;
             font-size: clamp(0.82rem, 2.3vw, 0.9rem);
@@ -262,7 +365,7 @@
 
         /* Action Plan Box */
         .action-plan-box {
-            background: rgba(10, 15, 27, 0.85);
+            background: rgba(8, 12, 23, 0.88);
             border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: clamp(14px, 2.5vw, 18px);
@@ -284,7 +387,7 @@
         .plan-header span {
             font-size: 0.78rem;
             font-weight: 800;
-            color: var(--text-secondary);
+            color: var(--gold-light);
             letter-spacing: 0.5px;
         }
 
@@ -298,7 +401,7 @@
 
         .chip-buy { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--green); }
         .chip-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid var(--red); }
-        .chip-hold { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid var(--yellow); }
+        .chip-hold { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid var(--gold); }
 
         .plan-grid {
             display: grid;
@@ -307,10 +410,10 @@
         }
 
         .plan-item {
-            background: #121a2c;
+            background: #0f1628;
             padding: 10px 12px;
             border-radius: 10px;
-            border: 1px solid #1d2a45;
+            border: 1px solid #1c2742;
         }
 
         .plan-item .lbl {
@@ -328,7 +431,7 @@
         }
 
         /* ========================================================
-           METRIC INDICATOR CARDS (RESPONSIVE GRID)
+           METRIC INDICATOR CARDS (4 KPI BOXES)
            ======================================================== */
         .grid-cards {
             display: grid;
@@ -343,6 +446,7 @@
             padding: clamp(16px, 2.5vw, 20px);
             border-radius: 14px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .stat-card-header {
@@ -411,7 +515,7 @@
             display: grid;
             grid-template-columns: 1.8fr 1.2fr;
             gap: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .chart-box, .logs-box {
@@ -437,12 +541,13 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            font-weight: 800;
         }
 
         .badge-live {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
             font-size: 0.72rem;
             padding: 3px 8px;
             border-radius: 20px;
@@ -465,7 +570,7 @@
             padding-right: 4px;
         }
 
-        /* Custom Modern Scrollbar */
+        /* Custom Scrollbar */
         .logs-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -491,6 +596,22 @@
         }
 
         /* ========================================================
+           FOOTER CIBUBUR ROYALE
+           ======================================================== */
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        .footer strong {
+            color: #fbbf24;
+        }
+
+        /* ========================================================
            MEDIA QUERIES (TABLET & SMARTPHONE)
            ======================================================== */
         @media (max-width: 960px) {
@@ -509,7 +630,7 @@
         }
 
         @media (max-width: 640px) {
-            .header-bar {
+            .navbar {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -524,6 +645,14 @@
             }
             .btn-refresh {
                 flex: 1;
+            }
+            .founder-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .founder-banner::after {
+                position: static;
+                margin-top: 6px;
             }
             .legend-bar {
                 flex-direction: column;
@@ -555,15 +684,17 @@
 
 <body>
     <div class="container">
-        <!-- Header -->
-        <header class="header-bar">
-            <div class="header-titles">
-                <h1>🤖 Tokocrypto Trading Bot & Analyzer</h1>
-                <p>Analisis Teknikal Otomatis Real-time (Candle 15M) | Terhubung ke Exchange Resmi</p>
+        <!-- Top Navigation Bar -->
+        <nav class="navbar">
+            <div class="brand-section">
+                <div class="brand-logo-icon">🪙</div>
+                <div class="brand-text">
+                    <h1>KontolKripto <span class="brand-badge">VIP Cibubur Royale</span></h1>
+                </div>
             </div>
             <div class="header-controls">
                 <div class="select-box">
-                    <label for="coinSelector">Pasar:</label>
+                    <label for="coinSelector">Pilih Aset:</label>
                     <select id="coinSelector" onchange="changeCoin(this.value)">
                         <option value="BTCUSDT">BTC / USDT</option>
                         <option value="ETHUSDT">ETH / USDT</option>
@@ -575,25 +706,39 @@
                     </select>
                 </div>
                 <button class="btn-refresh" onclick="triggerRefresh()">
-                    ⚡ Refresh Analisa
+                    ⚡ Refresh Sinyal
                 </button>
             </div>
-        </header>
+        </nav>
+
+        <!-- Founder & Platform Profile: Harris Aulia (Bacin) - Sultan Cibubur -->
+        <section class="founder-banner">
+            <div class="founder-avatar">🤴</div>
+            <div class="founder-content">
+                <h2>
+                    Harris Aulia (Bacin) 
+                    <span class="founder-tag">Founder & Konglomerat Cibubur</span>
+                </h2>
+                <p>
+                    Selamat datang di <strong>KontolKripto</strong>, portal analisis crypto eksklusif persembahan Harris Aulia (alias Bacin), sultan muda kaya raya dari Cibubur. Sistem ini menggunakan algoritma bot Tokocrypto pintar berkecepatan tinggi untuk mendeteksi momentum pasar, menangkap harga diskon (oversold), dan memaksimalkan cuan para konglomerat.
+                </p>
+            </div>
+        </section>
 
         <!-- Keterangan Indikator Warna Dinamis -->
         <div class="legend-bar">
-            <span class="legend-title">Panduan Warna:</span>
+            <span class="legend-title">Panduan Warna Sinyal:</span>
             <div class="legend-tag">
                 <span class="dot dot-green"></span>
-                <span style="color: #34d399;">HIJAU = Sinyal Beli (Titik Murah)</span>
+                <span style="color: #34d399;">HIJAU = Sinyal Beli (Titik Murah / Oversold)</span>
             </div>
             <div class="legend-tag">
                 <span class="dot dot-yellow"></span>
-                <span style="color: #fbbf24;">KUNING = Wait & See (Konsolidasi)</span>
+                <span style="color: #fbbf24;">KUNING = Wait & See (Konsolidasi / Tunggu Breakout)</span>
             </div>
             <div class="legend-tag">
                 <span class="dot dot-red"></span>
-                <span style="color: #f87171;">MERAH = Sinyal Jual (TP / Overbought)</span>
+                <span style="color: #f87171;">MERAH = Sinyal Jual (Take Profit / Overbought)</span>
             </div>
         </div>
 
@@ -605,17 +750,17 @@
                 </div>
                 <h2 class="hero-title color-hold" id="analysisTitle">Menghubungkan ke Pasar...</h2>
                 <p class="hero-summary" id="analysisSummary">
-                    Bot sedang mengunduh candlestick terbaru dari Tokocrypto untuk menghitung RSI, Tren Moving Average, serta Support & Resistance.
+                    Sistem KontolKripto sedang mengunduh data candlestick 15 menit dari Tokocrypto untuk menghitung RSI, Tren Moving Average, serta Support & Resistance.
                 </p>
                 <div class="advice-box" id="analysisAdvice">
-                    💡 <strong>Saran Eksekusi:</strong> Menunggu kalkulasi sinyal...
+                    💡 <strong>Saran Eksekusi Sultan:</strong> Menunggu kalkulasi sinyal...
                 </div>
             </div>
 
             <div class="hero-right">
                 <div class="action-plan-box">
                     <div class="plan-header">
-                        <span>🎯 TARGET RENCANA HARGA</span>
+                        <span>🎯 TARGET RENCANA TRADING</span>
                         <div class="confidence-chip chip-hold" id="confidenceBadge">Keyakinan: -</div>
                     </div>
                     <div class="plan-grid">
@@ -709,8 +854,8 @@
         <div class="main-layout">
             <div class="chart-box">
                 <div class="section-title">
-                    <h2>📊 Grafik Pergerakan Harga (15m)</h2>
-                    <span class="badge-live">● Live Tokocrypto</span>
+                    <h2>📊 Grafik Pergerakan Harga (15m Kline)</h2>
+                    <span class="badge-live">● Live Stream Tokocrypto</span>
                 </div>
                 <div class="chart-wrapper">
                     <canvas id="priceChart"></canvas>
@@ -719,13 +864,21 @@
 
             <div class="logs-box">
                 <div class="section-title">
-                    <h2>📝 Riwayat Log Analisis</h2>
+                    <h2>📝 Riwayat Log Analisis Bot</h2>
                 </div>
                 <div class="logs-container" id="logsContainer">
-                    <div class="log-row">Memuat log sistem...</div>
+                    <div class="log-row">Memuat log sistem KontolKripto...</div>
                 </div>
             </div>
         </div>
+
+        <!-- Footer Cibubur Royale -->
+        <footer class="footer">
+            <p>
+                <strong>KontolKripto</strong> — Platform Trading Bot Eksklusif & Analisis Pasar Real-time.<br>
+                Dimiliki & dikembangkan atas visi <strong>Harris Aulia (Bacin)</strong>, Konglomerat Muda Cibubur.
+            </p>
+        </footer>
     </div>
 
     <script>
@@ -740,8 +893,8 @@
                     datasets: [{
                         label: 'Harga Closing (USDT)',
                         data: [],
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                        borderColor: '#fbbf24',
+                        backgroundColor: 'rgba(251, 191, 36, 0.08)',
                         borderWidth: 2,
                         pointRadius: 2,
                         pointHoverRadius: 6,
@@ -810,7 +963,7 @@
                     signalAction.innerText = a.signal.action;
                     analysisTitle.innerText = a.explanation.title;
                     document.getElementById('analysisSummary').innerText = a.explanation.summary;
-                    document.getElementById('analysisAdvice').innerHTML = `💡 <strong>Saran Eksekusi:</strong> ${a.explanation.advice}`;
+                    document.getElementById('analysisAdvice').innerHTML = `💡 <strong>Saran Eksekusi Sultan:</strong> ${a.explanation.advice}`;
 
                     // Confidence & Risk
                     confidenceBadge.innerText = `Keyakinan: ${a.signal.confidence}%`;
