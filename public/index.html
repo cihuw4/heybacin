@@ -1,891 +1,419 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>KontolKripto — Platform Trading Elit Harris Aulia (Bacin) | Sultan Cibubur</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#05070f',
+                        surface: '#0b101f',
+                        surfaceHover: '#10172b',
+                        surfaceBorder: '#1c2742',
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        :root {
-            --bg-main: #060911;
-            --bg-card: #0d1322;
-            --bg-card-hover: #121a2e;
-            --border-color: #1a253d;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --gold: #f59e0b;
-            --gold-light: #fbbf24;
-            --gold-glow: rgba(245, 158, 11, 0.25);
-            --green: #10b981;
-            --green-glow: rgba(16, 185, 129, 0.25);
-            --red: #ef4444;
-            --red-glow: rgba(239, 68, 68, 0.25);
-            --blue: #38bdf8;
-            --purple: #a855f7;
+        /* Smooth Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05070f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1c2742;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        /* Pulse glow animation for badges */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(0.98); }
+        }
+        .animate-subtle {
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+
+        /* Prevent horizontal overflow on mobile */
+        html, body {
+            overflow-x: hidden;
+            background-color: #05070f;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            margin: 0;
-            padding: clamp(12px, 3vw, 24px);
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.05) 0%, transparent 40%);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* ========================================================
-           HEADER & NAV BAR (VIP LUXURY CONGLOMERATE THEME)
-           ======================================================== */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 14px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .brand-logo-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-            flex-shrink: 0;
-        }
-
-        .brand-text h1 {
-            margin: 0;
-            font-size: clamp(1.3rem, 4vw, 1.85rem);
-            font-weight: 900;
-            background: linear-gradient(90deg, #ffffff 0%, #fbbf24 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .select-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-card);
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            min-height: 44px;
-        }
-
-        .select-box label {
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            font-weight: 700;
-        }
-
-        .select-box select {
-            background: #060911;
-            color: #fbbf24;
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 800;
-            cursor: pointer;
-            outline: none;
-            font-size: 0.92rem;
-            min-height: 36px;
-        }
-
-        .btn-refresh {
-            background: linear-gradient(135deg, #18243c 0%, #121a2c 100%);
-            color: #f8fafc;
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            padding: 0 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            min-height: 44px;
-            font-size: 0.88rem;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-refresh:hover, .btn-refresh:active {
-            border-color: #fbbf24;
-            transform: scale(0.98);
-            background: #1e2c48;
-        }
-
-        /* ========================================================
-           FOUNDER & ABOUT BANNER (HARRIS AULIA / BACIN SULTAN CIBUBUR)
-           ======================================================== */
-        .founder-banner {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(13, 19, 34, 0.95) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 16px;
-            padding: clamp(14px, 2.5vw, 18px);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .founder-banner::after {
-            content: '👑 CIBUBUR ROYALE';
-            position: absolute;
-            right: 16px;
-            top: 14px;
-            font-size: 0.72rem;
-            font-weight: 900;
-            color: rgba(245, 158, 11, 0.4);
-            letter-spacing: 1px;
-        }
-
-        .founder-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-            border: 2px solid #ffffff;
-        }
-
-        .founder-content h2 {
-            margin: 0;
-            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
-            color: #ffffff;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .founder-tag {
-            background: #fbbf24;
-            color: #000000;
-            font-size: 0.65rem;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .founder-content p {
-            margin: 4px 0 0 0;
-            font-size: clamp(0.78rem, 2.2vw, 0.88rem);
-            color: #cbd5e1;
-            line-height: 1.5;
-        }
-
-        /* ========================================================
-           COLOR LEGEND BAR
-           ======================================================== */
-        .legend-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px 18px;
-            background: #0a0f1c;
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            font-size: clamp(0.72rem, 2.2vw, 0.82rem);
-        }
-
-        .legend-title {
-            font-weight: 800;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            font-size: 0.72rem;
-            letter-spacing: 0.5px;
-        }
-
-        .legend-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-        .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-        .dot-yellow { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-        .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
-
-        /* ========================================================
-           HERO SIGNAL CARD (DYNAMIC THEME)
-           ======================================================== */
-        .hero-card {
-            border-radius: 18px;
-            padding: clamp(16px, 3vw, 26px);
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: clamp(16px, 3vw, 24px);
-            position: relative;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .hero-card.theme-buy {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, #0d1728 75%);
-            border: 2px solid var(--green);
-            box-shadow: 0 10px 35px rgba(16, 185, 129, 0.25);
-        }
-
-        .hero-card.theme-sell {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, #1c0f1d 75%);
-            border: 2px solid var(--red);
-            box-shadow: 0 10px 35px rgba(239, 68, 68, 0.25);
-        }
-
-        .hero-card.theme-hold {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, #191823 75%);
-            border: 2px solid var(--gold);
-            box-shadow: 0 10px 35px rgba(245, 158, 11, 0.25);
-        }
-
-        .signal-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .pill-buy { background: var(--green); color: #042f1e; }
-        .pill-sell { background: var(--red); color: #ffffff; }
-        .pill-hold { background: var(--gold); color: #2b1700; }
-
-        .hero-title {
-            margin: 0 0 10px 0;
-            font-size: clamp(1.15rem, 3.5vw, 1.45rem);
-            font-weight: 800;
-            line-height: 1.35;
-        }
-
-        .hero-title.color-buy { color: #34d399; }
-        .hero-title.color-sell { color: #f87171; }
-        .hero-title.color-hold { color: #fbbf24; }
-
-        .hero-summary {
-            color: #cbd5e1;
-            font-size: clamp(0.85rem, 2.4vw, 0.95rem);
-            line-height: 1.6;
-            margin-bottom: 14px;
-        }
-
-        .advice-box {
-            background: rgba(6, 9, 17, 0.75);
-            border-left: 4px solid var(--gold);
-            padding: 12px 14px;
-            border-radius: 0 10px 10px 0;
-            font-size: clamp(0.82rem, 2.3vw, 0.9rem);
-            color: #f1f5f9;
-            line-height: 1.5;
-        }
-
-        /* Action Plan Box */
-        .action-plan-box {
-            background: rgba(8, 12, 23, 0.88);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: clamp(14px, 2.5vw, 18px);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .plan-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #1a253d;
-            gap: 8px;
-        }
-
-        .plan-header span {
-            font-size: 0.78rem;
-            font-weight: 800;
-            color: var(--gold-light);
-            letter-spacing: 0.5px;
-        }
-
-        .confidence-chip {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .chip-buy { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--green); }
-        .chip-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid var(--red); }
-        .chip-hold { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid var(--gold); }
-
-        .plan-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .plan-item {
-            background: #0f1628;
-            padding: 10px 12px;
-            border-radius: 10px;
-            border: 1px solid #1c2742;
-        }
-
-        .plan-item .lbl {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .plan-item .val {
-            font-size: clamp(0.98rem, 2.8vw, 1.15rem);
-            font-weight: 900;
-            color: #ffffff;
-            word-break: break-all;
-        }
-
-        /* ========================================================
-           METRIC INDICATOR CARDS (4 KPI BOXES)
-           ======================================================== */
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: clamp(16px, 2.5vw, 20px);
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .stat-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .stat-card-header h3 {
-            margin: 0;
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-icon {
-            font-size: 1.2rem;
-        }
-
-        .stat-value {
-            font-size: clamp(1.4rem, 4vw, 1.85rem);
-            font-weight: 900;
-            color: #ffffff;
-            margin: 0 0 6px 0;
-            word-break: break-all;
-        }
-
-        .stat-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin: 0;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        /* RSI Visual Bar */
-        .rsi-meter {
-            height: 9px;
-            background: #1a253d;
-            border-radius: 6px;
-            margin: 12px 0 6px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .rsi-meter-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.6s ease, background 0.4s ease;
-        }
-
-        .rsi-zones {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        /* ========================================================
-           LAYOUT GRAFIK & LOGS (RESPONSIVE)
-           ======================================================== */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1.8fr 1.2fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .chart-box, .logs-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: clamp(14px, 2.5vw, 20px);
-        }
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .section-title h2 {
-            margin: 0;
-            font-size: clamp(0.92rem, 2.5vw, 1.05rem);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 800;
-        }
-
-        .badge-live {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            font-size: 0.72rem;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 300px;
-        }
-
-        .logs-container {
-            height: 300px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-right: 4px;
-        }
-
-        /* Custom Scrollbar */
-        .logs-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        .logs-container::-webkit-scrollbar-track {
-            background: #090e1a;
-            border-radius: 4px;
-        }
-        .logs-container::-webkit-scrollbar-thumb {
-            background: #223254;
-            border-radius: 4px;
-        }
-
-        .log-row {
-            background: #090e1a;
-            border: 1px solid #18243c;
-            padding: 8px 10px;
-            border-radius: 8px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: clamp(0.72rem, 2vw, 0.78rem);
-            line-height: 1.45;
-            color: #cbd5e1;
-            word-break: break-word;
-        }
-
-        /* ========================================================
-           FOOTER CIBUBUR ROYALE
-           ======================================================== */
-        .footer {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            line-height: 1.6;
-        }
-
-        .footer strong {
-            color: #fbbf24;
-        }
-
-        /* ========================================================
-           MEDIA QUERIES (TABLET & SMARTPHONE)
-           ======================================================== */
-        @media (max-width: 960px) {
-            .hero-card {
-                grid-template-columns: 1fr;
-            }
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            .chart-wrapper {
-                height: 260px;
-            }
-            .logs-container {
-                height: 240px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .navbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .header-controls {
-                width: 100%;
-            }
-            .select-box {
-                flex: 1;
-            }
-            .select-box select {
-                width: 100%;
-            }
-            .btn-refresh {
-                flex: 1;
-            }
-            .founder-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-            .founder-banner::after {
-                position: static;
-                margin-top: 6px;
-            }
-            .legend-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .grid-cards {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .stat-card {
-                padding: 14px;
-            }
-            .chart-wrapper {
-                height: 220px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .grid-cards {
-                grid-template-columns: 1fr;
-            }
-            .plan-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Native-feeling touch responsiveness */
+        button, select {
+            touch-action: manipulation;
         }
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <!-- Top Navigation Bar -->
-        <nav class="navbar">
-            <div class="brand-section">
-                <div class="brand-logo-icon">🪙</div>
-                <div class="brand-text">
-                    <h1>KontolKripto <span class="brand-badge">VIP Cibubur Royale</span></h1>
-                </div>
-            </div>
-            <div class="header-controls">
-                <div class="select-box">
-                    <label for="coinSelector">Pilih Aset:</label>
-                    <select id="coinSelector" onchange="changeCoin(this.value)">
-                        <option value="BTCUSDT">BTC / USDT</option>
-                        <option value="ETHUSDT">ETH / USDT</option>
-                        <option value="SOLUSDT">SOL / USDT</option>
-                        <option value="BNBUSDT">BNB / USDT</option>
-                        <option value="ADAUSDT">ADA / USDT</option>
-                        <option value="XRPUSDT">XRP / USDT</option>
-                        <option value="DOGEUSDT">DOGE / USDT</option>
-                    </select>
-                </div>
-                <button class="btn-refresh" onclick="triggerRefresh()">
-                    ⚡ Refresh Sinyal
-                </button>
-            </div>
-        </nav>
+<body class="bg-obsidian text-slate-100 min-h-screen selection:bg-amber-500 selection:text-black">
 
-        <!-- Founder & Platform Profile: Harris Aulia (Bacin) - Sultan Cibubur -->
-        <section class="founder-banner">
-            <div class="founder-avatar">🤴</div>
-            <div class="founder-content">
-                <h2>
-                    Harris Aulia (Bacin) 
-                    <span class="founder-tag">Founder & Konglomerat Cibubur</span>
-                </h2>
-                <p>
-                    Selamat datang di <strong>KontolKripto</strong>, portal analisis crypto eksklusif persembahan Harris Aulia (alias Bacin), sultan muda kaya raya dari Cibubur. Sistem ini menggunakan algoritma bot Tokocrypto pintar berkecepatan tinggi untuk mendeteksi momentum pasar, menangkap harga diskon (oversold), dan memaksimalkan cuan para konglomerat.
-                </p>
+    <!-- Ambient Luxury Glow Gradients -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+    <div class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-4 sm:space-y-6">
+
+        <!-- ========================================================
+             1. TOP APP BAR / NAVBAR (MOBILE-FIRST)
+             ======================================================== -->
+        <header class="bg-surface/90 backdrop-blur-md border border-surfaceBorder rounded-2xl p-3 sm:p-4 shadow-xl">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                
+                <!-- Logo & Brand Info -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-xl sm:text-2xl shadow-lg shadow-amber-500/25 flex-shrink-0">
+                        🪙
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-lg sm:text-2xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-amber-400 bg-clip-text text-transparent">
+                                KontolKripto
+                            </h1>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-extrabold bg-amber-500/15 text-amber-400 border border-amber-500/30 tracking-wider uppercase">
+                                VIP Royale
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Live Engine Tokocrypto • Sultan Cibubur
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Controls: Coin Selector & Refresh Button -->
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <!-- Dropdown Koin -->
+                    <div class="relative flex-1 sm:w-44">
+                        <select id="coinSelector" onchange="changeCoin(this.value)"
+                            class="w-full bg-obsidian border border-surfaceBorder hover:border-amber-500/50 text-amber-400 text-xs sm:text-sm font-bold rounded-xl px-3 py-2.5 outline-none cursor-pointer transition appearance-none pr-8">
+                            <option value="BTCUSDT">BTC / USDT</option>
+                            <option value="ETHUSDT">ETH / USDT</option>
+                            <option value="SOLUSDT">SOL / USDT</option>
+                            <option value="BNBUSDT">BNB / USDT</option>
+                            <option value="ADAUSDT">ADA / USDT</option>
+                            <option value="XRPUSDT">XRP / USDT</option>
+                            <option value="DOGEUSDT">DOGE / USDT</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    </div>
+
+                    <!-- Tombol Refresh -->
+                    <button onclick="triggerRefresh()" id="refreshBtn"
+                        class="bg-gradient-to-r from-surfaceHover to-surface border border-surfaceBorder hover:border-amber-500/60 active:scale-95 text-slate-200 hover:text-amber-400 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md">
+                        <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4 text-amber-400"></i>
+                        <span class="hidden sm:inline">Refresh</span>
+                    </button>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- ========================================================
+             2. FOUNDER PROFILE BANNER (HARRIS AULIA / BACIN SULTAN CIBUBUR)
+             ======================================================== -->
+        <section class="relative overflow-hidden bg-gradient-to-r from-amber-500/10 via-surface to-surface border border-amber-500/25 rounded-2xl p-4 sm:p-5 shadow-lg">
+            <div class="absolute -right-4 -bottom-6 text-7xl sm:text-9xl opacity-5 pointer-events-none select-none">
+                👑
+            </div>
+            <div class="flex items-start sm:items-center gap-3 sm:gap-4 relative z-10">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-400 via-amber-500 to-amber-600 p-0.5 flex-shrink-0 shadow-lg shadow-amber-500/30">
+                    <div class="w-full h-full rounded-full bg-obsidian flex items-center justify-center text-2xl sm:text-3xl">
+                        🤴
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="text-sm sm:text-base font-extrabold text-white">
+                            Harris Aulia <span class="text-amber-400">(alias Bacin)</span>
+                        </h2>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-400 text-obsidian uppercase tracking-wider">
+                            Konglomerat Cibubur
+                        </span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                        Portal analisis eksklusif persembahan sultan muda Cibubur. Ditenagai bot cerdas Tokocrypto untuk memantau momentum pasar, menangkap harga diskon (<span class="text-emerald-400 font-bold">oversold</span>), dan memaksimalkan cuan para konglomerat.
+                    </p>
+                </div>
             </div>
         </section>
 
-        <!-- Keterangan Indikator Warna Dinamis -->
-        <div class="legend-bar">
-            <span class="legend-title">Panduan Warna Sinyal:</span>
-            <div class="legend-tag">
-                <span class="dot dot-green"></span>
-                <span style="color: #34d399;">HIJAU = Sinyal Beli (Titik Murah / Oversold)</span>
-            </div>
-            <div class="legend-tag">
-                <span class="dot dot-yellow"></span>
-                <span style="color: #fbbf24;">KUNING = Wait & See (Konsolidasi / Tunggu Breakout)</span>
-            </div>
-            <div class="legend-tag">
-                <span class="dot dot-red"></span>
-                <span style="color: #f87171;">MERAH = Sinyal Jual (Take Profit / Overbought)</span>
-            </div>
+        <!-- ========================================================
+             3. MOBILE SEGMENTED TABS (Navigasi Cepat di Smartphone)
+             ======================================================== -->
+        <div class="flex sm:hidden p-1 bg-surface border border-surfaceBorder rounded-xl gap-1 text-xs font-bold text-center">
+            <button onclick="setMobileTab('all')" id="tab-all" class="flex-1 py-2 rounded-lg transition bg-amber-500 text-obsidian font-black">
+                Semua
+            </button>
+            <button onclick="setMobileTab('signal')" id="tab-signal" class="flex-1 py-2 rounded-lg transition text-slate-400 hover:text-white">
+                Sinyal
+            </button>
+            <button onclick="setMobileTab('chart')" id="tab-chart" class="flex-1 py-2 rounded-lg transition text-slate-400 hover:text-white">
+                Grafik
+            </button>
+            <button onclick="setMobileTab('logs')" id="tab-logs" class="flex-1 py-2 rounded-lg transition text-slate-400 hover:text-white">
+                Log
+            </button>
         </div>
 
-        <!-- HERO CARD: SINYAL DINAMIS DENGAN BACKGROUND BERWARNA -->
-        <div class="hero-card theme-hold" id="heroCard">
-            <div class="hero-left">
-                <div class="signal-pill pill-hold" id="signalPill">
-                    <span id="signalAction">WAIT & SEE / NETRAL</span>
-                </div>
-                <h2 class="hero-title color-hold" id="analysisTitle">Menghubungkan ke Pasar...</h2>
-                <p class="hero-summary" id="analysisSummary">
-                    Sistem KontolKripto sedang mengunduh data candlestick 15 menit dari Tokocrypto untuk menghitung RSI, Tren Moving Average, serta Support & Resistance.
-                </p>
-                <div class="advice-box" id="analysisAdvice">
-                    💡 <strong>Saran Eksekusi Sultan:</strong> Menunggu kalkulasi sinyal...
-                </div>
-            </div>
+        <!-- ========================================================
+             4. HERO SIGNAL CARD (DYNAMIC THEME: HIJAU / KUNING / MERAH)
+             ======================================================== -->
+        <section id="section-signal" class="transition-all duration-500">
+            <div id="heroCard" class="relative overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-7 border-2 transition-all duration-500 shadow-2xl bg-surface border-amber-500/40">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
+                    
+                    <!-- Left: Signal Badges, Headline & Human Explanation -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <div>
+                            <!-- Pill Signal -->
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider shadow-md mb-2" id="signalPill">
+                                <span class="w-2.5 h-2.5 rounded-full bg-current animate-pulse"></span>
+                                <span id="signalAction">MEMUAT DATA ANALISIS...</span>
+                            </div>
 
-            <div class="hero-right">
-                <div class="action-plan-box">
-                    <div class="plan-header">
-                        <span>🎯 TARGET RENCANA TRADING</span>
-                        <div class="confidence-chip chip-hold" id="confidenceBadge">Keyakinan: -</div>
-                    </div>
-                    <div class="plan-grid">
-                        <div class="plan-item">
-                            <div class="lbl">Harga Masuk (Entry)</div>
-                            <div class="val" id="planEntry">$0.00</div>
+                            <!-- Headline Title -->
+                            <h2 id="analysisTitle" class="text-base sm:text-xl lg:text-2xl font-black text-white mt-1 leading-snug">
+                                Menghubungkan ke Pasar Tokocrypto...
+                            </h2>
+
+                            <!-- Summary Explanation -->
+                            <p id="analysisSummary" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                                Bot sedang menganalisis candlestick 15 menit dari Tokocrypto untuk menghitung RSI, Tren Moving Average, serta Support & Resistance.
+                            </p>
                         </div>
-                        <div class="plan-item">
-                            <div class="lbl">Tingkat Risiko</div>
-                            <div class="val" id="planRisk" style="font-size: 0.95rem; color: #38bdf8;">-</div>
-                        </div>
-                        <div class="plan-item" style="border: 1px solid rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
-                            <div class="lbl" style="color: #34d399;">Target Profit (TP 1) +1.5%</div>
-                            <div class="val" id="planTp1" style="color: #34d399;">$0.00</div>
-                        </div>
-                        <div class="plan-item" style="border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08);">
-                            <div class="lbl" style="color: #f87171;">Batas Rugi (SL) -1.5%</div>
-                            <div class="val" id="planSl" style="color: #f87171;">$0.00</div>
+
+                        <!-- Action Advice Box -->
+                        <div id="adviceBox" class="bg-obsidian/75 border-l-4 border-amber-400 rounded-r-xl p-3 sm:p-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                            💡 <strong class="text-amber-400">Saran Eksekusi Sultan:</strong> <span id="analysisAdvice">Menunggu kalkulasi indikator...</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Metric Indicator Cards -->
-        <div class="grid-cards">
+                    <!-- Right: Action Plan Target Box -->
+                    <div class="lg:col-span-5 bg-obsidian/90 border border-surfaceBorder rounded-xl p-4 flex flex-col justify-between gap-3 shadow-inner">
+                        <div class="flex items-center justify-between pb-2.5 border-b border-surfaceBorder">
+                            <span class="text-xs font-extrabold text-amber-400 tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+                                TARGET RENCANA TRADING
+                            </span>
+                            <span id="confidenceBadge" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                Keyakinan: -
+                            </span>
+                        </div>
+
+                        <!-- 2x2 Action Plan Grid -->
+                        <div class="grid grid-cols-2 gap-2 sm:gap-2.5">
+                            <div class="bg-surface/80 p-2.5 sm:p-3 rounded-lg border border-surfaceBorder">
+                                <div class="text-[11px] text-slate-400 font-semibold mb-0.5">Harga Masuk (Entry)</div>
+                                <div id="planEntry" class="text-sm sm:text-base font-black text-white">$0.00</div>
+                            </div>
+                            <div class="bg-surface/80 p-2.5 sm:p-3 rounded-lg border border-surfaceBorder">
+                                <div class="text-[11px] text-slate-400 font-semibold mb-0.5">Tingkat Risiko</div>
+                                <div id="planRisk" class="text-sm sm:text-base font-black text-sky-400">-</div>
+                            </div>
+                            <div class="bg-emerald-500/10 p-2.5 sm:p-3 rounded-lg border border-emerald-500/30">
+                                <div class="text-[11px] text-emerald-400 font-bold mb-0.5">Target Profit (TP 1) +1.5%</div>
+                                <div id="planTp1" class="text-sm sm:text-base font-black text-emerald-400">$0.00</div>
+                            </div>
+                            <div class="bg-rose-500/10 p-2.5 sm:p-3 rounded-lg border border-rose-500/30">
+                                <div class="text-[11px] text-rose-400 font-bold mb-0.5">Batas Rugi (SL) -1.5%</div>
+                                <div id="planSl" class="text-sm sm:text-base font-black text-rose-400">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================================
+             5. METRIC INDICATORS (4 RESPONSIVE KPI CARDS)
+             ======================================================== -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+            
             <!-- 1. Harga Saat Ini -->
-            <div class="stat-card" id="cardPriceBox">
-                <div class="stat-card-header">
-                    <h3>Harga Terakhir</h3>
-                    <div class="stat-icon">💰</div>
+            <div class="bg-surface border border-surfaceBorder rounded-2xl p-3 sm:p-4 hover:border-amber-500/30 transition shadow-md">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase mb-1">
+                    <span>Harga Terakhir</span>
+                    <i data-lucide="coins" class="w-4 h-4 text-amber-400"></i>
                 </div>
-                <div class="stat-value" id="cardPrice">$0.00</div>
-                <div class="stat-desc">
-                    <span id="cardSymbol">BTCUSDT</span> • Update: <span id="lastUpdatedTime">-</span>
+                <div id="cardPrice" class="text-base sm:text-2xl font-black text-white my-1 truncate">
+                    $0.00
+                </div>
+                <div class="text-[11px] text-slate-400 truncate">
+                    <span id="cardSymbol" class="font-bold text-slate-300">BTCUSDT</span> • <span id="lastUpdatedTime">-</span>
                 </div>
             </div>
 
             <!-- 2. RSI Card & Meter -->
-            <div class="stat-card" id="cardRsiBox">
-                <div class="stat-card-header">
-                    <h3>Indikator RSI (14)</h3>
-                    <div class="stat-icon">📊</div>
+            <div class="bg-surface border border-surfaceBorder rounded-2xl p-3 sm:p-4 hover:border-amber-500/30 transition shadow-md">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase mb-1">
+                    <span>RSI (14)</span>
+                    <i data-lucide="gauge" class="w-4 h-4 text-amber-400"></i>
                 </div>
-                <div class="stat-value" id="cardRsi" style="color: #fbbf24;">50.0</div>
-                <div class="rsi-meter">
-                    <div class="rsi-meter-fill" id="rsiMeterFill" style="width: 50%; background: #fbbf24;"></div>
+                <div id="cardRsi" class="text-base sm:text-2xl font-black text-amber-400 my-1">
+                    50.0
                 </div>
-                <div class="rsi-zones">
-                    <span style="color: #34d399;">Murah (&lt;30)</span>
-                    <span id="rsiStatusText" style="color: #fbbf24;">Normal</span>
-                    <span style="color: #f87171;">Mahal (&gt;70)</span>
+                <div class="h-1.5 w-full bg-obsidian rounded-full overflow-hidden my-1.5 border border-surfaceBorder">
+                    <div id="rsiMeterFill" class="h-full bg-amber-400 transition-all duration-500" style="width: 50%;"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-bold">
+                    <span class="text-emerald-400">&lt;30 Murah</span>
+                    <span id="rsiStatusText" class="text-amber-400 truncate">Normal</span>
+                    <span class="text-rose-400">&gt;70 Mahal</span>
                 </div>
             </div>
 
-            <!-- 3. Tren Pasar (EMA) -->
-            <div class="stat-card" id="cardTrendBox">
-                <div class="stat-card-header">
-                    <h3>Tren Moving Average</h3>
-                    <div class="stat-icon">📈</div>
+            <!-- 3. Tren Pasar EMA -->
+            <div class="bg-surface border border-surfaceBorder rounded-2xl p-3 sm:p-4 hover:border-amber-500/30 transition shadow-md">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase mb-1">
+                    <span>Tren EMA</span>
+                    <i data-lucide="trending-up" class="w-4 h-4 text-amber-400"></i>
                 </div>
-                <div class="stat-value" id="cardTrend" style="font-size: clamp(1.15rem, 3vw, 1.35rem); color: #fbbf24;">SIDEWAYS ➡️</div>
-                <div class="stat-desc" id="cardTrendDesc">
+                <div id="cardTrend" class="text-sm sm:text-lg font-black text-amber-400 my-1 truncate">
+                    SIDEWAYS ➡️
+                </div>
+                <div id="cardTrendDesc" class="text-[11px] text-slate-400 truncate">
                     EMA 9: - • EMA 21: -
                 </div>
             </div>
 
             <!-- 4. Support & Resistance -->
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3>Support & Resistance</h3>
-                    <div class="stat-icon">🛡️</div>
+            <div class="bg-surface border border-surfaceBorder rounded-2xl p-3 sm:p-4 hover:border-amber-500/30 transition shadow-md">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase mb-1">
+                    <span>SnR (30 Lilin)</span>
+                    <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; gap: 8px;">
+                <div class="flex justify-between items-baseline my-1">
                     <div>
-                        <div style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 700;">RESISTANCE</div>
-                        <div style="font-size: clamp(1rem, 2.5vw, 1.15rem); font-weight: 900; color: #f87171;" id="cardResistance">$0.00</div>
+                        <div class="text-[10px] text-rose-400 font-bold uppercase">Resist</div>
+                        <div id="cardResistance" class="text-xs sm:text-sm font-black text-rose-400 truncate">$0.00</div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 700;">SUPPORT</div>
-                        <div style="font-size: clamp(1rem, 2.5vw, 1.15rem); font-weight: 900; color: #34d399;" id="cardSupport">$0.00</div>
+                    <div class="text-right">
+                        <div class="text-[10px] text-emerald-400 font-bold uppercase">Supp</div>
+                        <div id="cardSupport" class="text-xs sm:text-sm font-black text-emerald-400 truncate">$0.00</div>
                     </div>
                 </div>
-                <div class="stat-desc">
-                    Batas 30 lilin terakhir
+                <div class="text-[11px] text-slate-400 truncate">
+                    Batas kisaran pasar
                 </div>
             </div>
-        </div>
 
-        <!-- Main Chart & Logs Layout -->
-        <div class="main-layout">
-            <div class="chart-box">
-                <div class="section-title">
-                    <h2>📊 Grafik Pergerakan Harga (15m Kline)</h2>
-                    <span class="badge-live">● Live Stream Tokocrypto</span>
+        </section>
+
+        <!-- ========================================================
+             6. CHART & ACTIVITY LOGS (RESPONSIVE GRID)
+             ======================================================== -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+            
+            <!-- Chart Box -->
+            <section id="section-chart" class="lg:col-span-8 bg-surface border border-surfaceBorder rounded-2xl p-4 sm:p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                        <i data-lucide="line-chart" class="w-4 h-4 text-amber-400"></i>
+                        Grafik Pergerakan Harga (15m Kline)
+                    </h3>
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        Tokocrypto
+                    </span>
                 </div>
-                <div class="chart-wrapper">
+
+                <!-- Responsive Chart Wrapper -->
+                <div class="relative w-full h-56 sm:h-72 lg:h-80">
                     <canvas id="priceChart"></canvas>
                 </div>
-            </div>
+            </section>
 
-            <div class="logs-box">
-                <div class="section-title">
-                    <h2>📝 Riwayat Log Analisis Bot</h2>
+            <!-- Logs Box -->
+            <section id="section-logs" class="lg:col-span-4 bg-surface border border-surfaceBorder rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-4 h-4 text-amber-400"></i>
+                        Log Aktivitas Bot
+                    </h3>
+                    <span class="text-[10px] text-slate-400 font-mono">Real-time</span>
                 </div>
-                <div class="logs-container" id="logsContainer">
-                    <div class="log-row">Memuat log sistem KontolKripto...</div>
+
+                <div id="logsContainer" class="flex-1 overflow-y-auto space-y-2 h-56 sm:h-72 lg:h-80 pr-1 font-mono text-xs text-slate-300">
+                    <div class="bg-obsidian/75 p-2 rounded-lg border border-surfaceBorder text-slate-400">
+                        Memuat data log KontolKripto...
+                    </div>
                 </div>
-            </div>
+            </section>
+
         </div>
 
-        <!-- Footer Cibubur Royale -->
-        <footer class="footer">
+        <!-- ========================================================
+             7. FOOTER CIBUBUR ROYALE
+             ======================================================== -->
+        <footer class="pt-4 border-t border-surfaceBorder/60 text-center text-xs text-slate-400 space-y-1">
             <p>
-                <strong>KontolKripto</strong> — Platform Trading Bot Eksklusif & Analisis Pasar Real-time.<br>
-                Dimiliki & dikembangkan atas visi <strong>Harris Aulia (Bacin)</strong>, Konglomerat Muda Cibubur.
+                <strong class="text-amber-400">KontolKripto</strong> — Platform Trading Bot & Analisis Pasar Real-time.
+            </p>
+            <p class="text-[11px] text-slate-400">
+                Dimiliki & dikembangkan atas visi <strong class="text-slate-300">Harris Aulia (Bacin)</strong>, Konglomerat Muda Cibubur.
             </p>
         </footer>
+
     </div>
 
+    <!-- ========================================================
+         JAVASCRIPT LOGIC & CHART RENDER
+         ======================================================== -->
     <script>
         let chart;
 
+        // Render Lucide Icons
+        function refreshIcons() {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }
+
         function initChart() {
             const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(245, 158, 11, 0.25)');
+            gradient.addColorStop(1, 'rgba(245, 158, 11, 0.00)');
+
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -894,10 +422,11 @@
                         label: 'Harga Closing (USDT)',
                         data: [],
                         borderColor: '#fbbf24',
-                        backgroundColor: 'rgba(251, 191, 36, 0.08)',
+                        backgroundColor: gradient,
                         borderWidth: 2,
-                        pointRadius: 2,
-                        pointHoverRadius: 6,
+                        pointRadius: 1,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#fbbf24',
                         fill: true,
                         tension: 0.25
                     }]
@@ -906,8 +435,15 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#cbd5e1', font: { weight: '600', size: 12 } } },
+                        legend: { display: false },
                         tooltip: {
+                            backgroundColor: '#0b101f',
+                            titleColor: '#fbbf24',
+                            bodyColor: '#ffffff',
+                            borderColor: '#1c2742',
+                            borderWidth: 1,
+                            padding: 8,
+                            displayColors: false,
                             callbacks: {
                                 label: ctx => ` Harga: $${Number(ctx.raw).toLocaleString()}`
                             }
@@ -916,21 +452,21 @@
                     scales: {
                         x: {
                             ticks: {
-                                color: '#94a3b8',
+                                color: '#64748b',
                                 font: { size: 10 },
                                 maxRotation: 0,
                                 autoSkip: true,
-                                maxTicksLimit: 7
+                                maxTicksLimit: 6
                             },
-                            grid: { color: 'rgba(34, 50, 78, 0.4)' }
+                            grid: { color: 'rgba(28, 39, 66, 0.35)' }
                         },
                         y: {
                             ticks: {
-                                color: '#94a3b8',
+                                color: '#64748b',
                                 font: { size: 10 },
                                 callback: val => '$' + Number(val).toLocaleString()
                             },
-                            grid: { color: 'rgba(34, 50, 78, 0.4)' }
+                            grid: { color: 'rgba(28, 39, 66, 0.35)' }
                         }
                     }
                 }
@@ -958,12 +494,13 @@
                 const signalAction = document.getElementById('signalAction');
                 const analysisTitle = document.getElementById('analysisTitle');
                 const confidenceBadge = document.getElementById('confidenceBadge');
+                const adviceBox = document.getElementById('adviceBox');
 
                 if (a && a.signal) {
                     signalAction.innerText = a.signal.action;
                     analysisTitle.innerText = a.explanation.title;
                     document.getElementById('analysisSummary').innerText = a.explanation.summary;
-                    document.getElementById('analysisAdvice').innerHTML = `💡 <strong>Saran Eksekusi Sultan:</strong> ${a.explanation.advice}`;
+                    document.getElementById('analysisAdvice').innerText = a.explanation.advice;
 
                     // Confidence & Risk
                     confidenceBadge.innerText = `Keyakinan: ${a.signal.confidence}%`;
@@ -974,27 +511,22 @@
                     document.getElementById('planTp1').innerText = '$' + a.targetLevels.tp1.toLocaleString();
                     document.getElementById('planSl').innerText = '$' + a.targetLevels.sl.toLocaleString();
 
-                    // Dynamic colors
-                    heroCard.className = 'hero-card';
-                    signalPill.className = 'signal-pill';
-                    analysisTitle.className = 'hero-title';
-                    confidenceBadge.className = 'confidence-chip';
-
+                    // Dynamic Color Themes (Emerald = BUY, Rose = SELL, Gold = HOLD)
                     if (a.signal.badge === 'BUY') {
-                        heroCard.classList.add('theme-buy');
-                        signalPill.classList.add('pill-buy');
-                        analysisTitle.classList.add('color-buy');
-                        confidenceBadge.classList.add('chip-buy');
+                        heroCard.className = 'relative overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-7 border-2 transition-all duration-500 shadow-2xl bg-gradient-to-br from-emerald-950/40 via-surface to-surface border-emerald-500 shadow-emerald-500/20';
+                        signalPill.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider shadow-md mb-2 bg-emerald-500 text-black';
+                        confidenceBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                        adviceBox.className = 'bg-obsidian/75 border-l-4 border-emerald-400 rounded-r-xl p-3 sm:p-4 text-xs sm:text-sm text-slate-200 leading-relaxed';
                     } else if (a.signal.badge === 'SELL') {
-                        heroCard.classList.add('theme-sell');
-                        signalPill.classList.add('pill-sell');
-                        analysisTitle.classList.add('color-sell');
-                        confidenceBadge.classList.add('chip-sell');
+                        heroCard.className = 'relative overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-7 border-2 transition-all duration-500 shadow-2xl bg-gradient-to-br from-rose-950/40 via-surface to-surface border-rose-500 shadow-rose-500/20';
+                        signalPill.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider shadow-md mb-2 bg-rose-500 text-white';
+                        confidenceBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/30';
+                        adviceBox.className = 'bg-obsidian/75 border-l-4 border-rose-400 rounded-r-xl p-3 sm:p-4 text-xs sm:text-sm text-slate-200 leading-relaxed';
                     } else {
-                        heroCard.classList.add('theme-hold');
-                        signalPill.classList.add('pill-hold');
-                        analysisTitle.classList.add('color-hold');
-                        confidenceBadge.classList.add('chip-hold');
+                        heroCard.className = 'relative overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-7 border-2 transition-all duration-500 shadow-2xl bg-gradient-to-br from-amber-950/30 via-surface to-surface border-amber-500 shadow-amber-500/20';
+                        signalPill.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider shadow-md mb-2 bg-amber-500 text-black';
+                        confidenceBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                        adviceBox.className = 'bg-obsidian/75 border-l-4 border-amber-400 rounded-r-xl p-3 sm:p-4 text-xs sm:text-sm text-slate-200 leading-relaxed';
                     }
                 }
 
@@ -1011,7 +543,7 @@
                     rsiStatusText.style.color = a.rsi.color;
 
                     meterFill.style.width = `${Math.min(Math.max(rsiVal, 0), 100)}%`;
-                    meterFill.style.background = a.rsi.color;
+                    meterFill.style.backgroundColor = a.rsi.color;
                 }
 
                 // 4. Update Tren EMA
@@ -1020,11 +552,11 @@
                     cardTrend.innerText = a.trend.direction;
 
                     if (a.trend.direction.includes('BULLISH')) {
-                        cardTrend.style.color = '#34d399';
+                        cardTrend.className = 'text-sm sm:text-lg font-black text-emerald-400 my-1 truncate';
                     } else if (a.trend.direction.includes('BEARISH')) {
-                        cardTrend.style.color = '#f87171';
+                        cardTrend.className = 'text-sm sm:text-lg font-black text-rose-400 my-1 truncate';
                     } else {
-                        cardTrend.style.color = '#fbbf24';
+                        cardTrend.className = 'text-sm sm:text-lg font-black text-amber-400 my-1 truncate';
                     }
 
                     document.getElementById('cardTrendDesc').innerText = `EMA 9: $${a.trend.ema9.toLocaleString()} • EMA 21: $${a.trend.ema21.toLocaleString()}`;
@@ -1042,7 +574,6 @@
                     const prices = data.candles.map(c => c.close);
 
                     chart.data.labels = labels;
-                    chart.data.datasets[0].label = `Harga ${data.symbol}`;
                     chart.data.datasets[0].data = prices;
                     chart.update();
                 }
@@ -1050,8 +581,14 @@
                 // 7. Update Riwayat Log
                 if (data.logs && data.logs.length > 0) {
                     const logsContainer = document.getElementById('logsContainer');
-                    logsContainer.innerHTML = data.logs.map(log => `<div class="log-row">${log}</div>`).join('');
+                    logsContainer.innerHTML = data.logs.map(log => `
+                        <div class="bg-obsidian/80 p-2.5 rounded-lg border border-surfaceBorder hover:border-surfaceBorder/80 transition leading-snug">
+                            ${log}
+                        </div>
+                    `).join('');
                 }
+
+                refreshIcons();
             } catch (err) {
                 console.error('Error fetching dashboard status:', err);
             }
@@ -1074,19 +611,63 @@
         }
 
         async function triggerRefresh() {
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('animate-spin');
             try {
                 const res = await fetch('/api/refresh', { method: 'POST' });
                 const result = await res.json();
                 if (result.success) {
-                    fetchDashboardData();
+                    await fetchDashboardData();
                 }
             } catch (err) {
                 console.error('Gagal merefresh:', err);
+            } finally {
+                setTimeout(() => icon.classList.remove('animate-spin'), 600);
+            }
+        }
+
+        // Mobile Segmented Tabs Switcher
+        function setMobileTab(tab) {
+            const secSignal = document.getElementById('section-signal');
+            const secChart = document.getElementById('section-chart');
+            const secLogs = document.getElementById('section-logs');
+
+            const btnAll = document.getElementById('tab-all');
+            const btnSignal = document.getElementById('tab-signal');
+            const btnChart = document.getElementById('tab-chart');
+            const btnLogs = document.getElementById('tab-logs');
+
+            // Reset tab styles
+            [btnAll, btnSignal, btnChart, btnLogs].forEach(b => {
+                b.className = 'flex-1 py-2 rounded-lg transition text-slate-400 hover:text-white';
+            });
+
+            if (tab === 'signal') {
+                secSignal.classList.remove('hidden');
+                secChart.classList.add('hidden');
+                secLogs.classList.add('hidden');
+                btnSignal.className = 'flex-1 py-2 rounded-lg transition bg-amber-500 text-obsidian font-black';
+            } else if (tab === 'chart') {
+                secSignal.classList.add('hidden');
+                secChart.classList.remove('hidden');
+                secLogs.classList.add('hidden');
+                btnChart.className = 'flex-1 py-2 rounded-lg transition bg-amber-500 text-obsidian font-black';
+            } else if (tab === 'logs') {
+                secSignal.classList.add('hidden');
+                secChart.classList.add('hidden');
+                secLogs.classList.remove('hidden');
+                btnLogs.className = 'flex-1 py-2 rounded-lg transition bg-amber-500 text-obsidian font-black';
+            } else {
+                secSignal.classList.remove('hidden');
+                secChart.classList.remove('hidden');
+                secLogs.classList.remove('hidden');
+                btnAll.className = 'flex-1 py-2 rounded-lg transition bg-amber-500 text-obsidian font-black';
             }
         }
 
         initChart();
         fetchDashboardData();
+        refreshIcons();
         setInterval(fetchDashboardData, 3000);
     </script>
 </body>
